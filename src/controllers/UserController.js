@@ -9,9 +9,9 @@ class UsersController{
         throw new AppError("o nome é obrigatório")
     }
 
-
     response.json({name, email, password})
  }
+
  show(request, response){
     const {name} = request.params;
     response.json({name})
