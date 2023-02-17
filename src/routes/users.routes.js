@@ -1,8 +1,9 @@
 const { Router } = require("express");
 
+const usersRoutes = Router();
 const UsersController = require("../controllers/UserController");
 const usersController = new UsersController()
-const usersRoutes = Router();
+
 
 function myMiddleware(req, resp, next) {
     if(!req.body.isAdmin){
