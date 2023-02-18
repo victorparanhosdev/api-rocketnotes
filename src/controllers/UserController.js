@@ -16,7 +16,7 @@ async create(request, response){
 
    const hashedPassword = await hash(password, 8);
 
-   await database.run("INSERT INTO users (name, email, password, created_at) VALUES (?, ?, ?, DATETIME('now', 'localtime'))", [name, email, hashedPassword]);
+   await database.run("INSERT INTO users (name, email, password, created_at, updated_at) VALUES (?, ?, ?, DATETIME('now', 'localtime'), NULL)", [name, email, hashedPassword]);
 
    return response.status(201).json();
 
@@ -74,9 +74,16 @@ async update(request, response){
 async delete(request, response){
    const {id} = request.params;
 
+
    const database = await sqliteConnection();
 
+   await database.run("DELETE FROM users WHERE id = ?", [id])
 
+   return response.json({
+      usuario: id,
+      message: "Apagado com sucesso"
+   })
+   
 
  }
  
