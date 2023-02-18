@@ -16,7 +16,7 @@ async create(request, response){
 
    const hashedPassword = await hash(password, 8);
 
-   await database.run("INSERT INTO users (name, email, password, created_at) VALUES (?, ?, ?, DATETIME('now'))", [name, email, hashedPassword]);
+   await database.run("INSERT INTO users (name, email, password, created_at) VALUES (?, ?, ?, DATETIME('now', 'localtime'))", [name, email, hashedPassword]);
 
    return response.status(201).json();
 
@@ -60,13 +60,22 @@ async update(request, response){
    name = ?, 
    email = ?, 
    password = ?,
-   updated_at = DATETIME('now') 
+   updated_at = DATETIME('now', 'localtime') 
    WHERE id = ?`, 
    [user.name, user.email, user.password, id]
    
    );
 
    return response.json()
+
+
+ }
+
+async delete(request, response){
+   const {id} = request.params;
+
+   const database = await sqliteConnection();
+
 
 
  }

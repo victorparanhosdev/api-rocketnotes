@@ -5,9 +5,8 @@ const createUsers = `
   email VARCHAR,
   password VARCHAR, 
   avatar VARCHAR, 
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
-`
+  created_at TIMESTAMP DEFAULT (strftime('%d-%m-%Y %H:%M:%S', 'now', 'localtime')),
+  updated_at TIMESTAMP DEFAULT (strftime('%d-%m-%Y %H:%M:%S', 'now', 'localtime'))
+);`
 
 module.exports = createUsers;
