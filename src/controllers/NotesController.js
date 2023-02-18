@@ -57,15 +57,28 @@ class NotesController {
 
         await knex("notes").where({id}).delete()
 
-        return res.json()
+        return res.json({
+            nota: id,
+            message: "deletado com sucesso"
+        })
     }
 
     async index(req, res) {
-        const { user_id, id } = req.query
+        const { user_id, title, tags, id } = req.query
+
+        let notes;
+
+        if(tags){
+            const filteTags = tags.split(",").map(tag => tag.trim());
+            notes = await knex("tags").whereIn("name", filteTags)
+
+        }else {
+
+            notes = await knex("notes").where({user_id})
+            .whereLike("title", `%${title}%`).orderBy("title")
+        }
 
 
-
-        const notes = await knex("notes").where({user_id}).orderBy("title")
 
 
         return res.json(notes)
