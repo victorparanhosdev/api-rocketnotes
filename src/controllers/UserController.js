@@ -29,6 +29,7 @@ async update(request, response){
    
    const database = await sqliteConnection();
    const user = await database.get("SELECT * FROM users WHERE id = (?)", [id])
+   
    if(!user){
       throw new AppError("Usuário não encontrado");
 
