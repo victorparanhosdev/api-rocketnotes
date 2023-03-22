@@ -60,7 +60,6 @@ class NotesController {
             message: "deletado com sucesso"
         })
     }
-
     async index(req, res) {
         const { user_id, title, tags, id } = req.query
 
