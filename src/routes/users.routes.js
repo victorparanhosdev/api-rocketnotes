@@ -3,20 +3,14 @@ const { Router } = require("express");
 const usersRoutes = Router();
 const UsersController = require("../controllers/UserController");
 const usersController = new UsersController()
+const ensureAuthenticated = require("../middlewares/ensureAuthenticated")
 
 
-function myMiddleware(req, resp, next) {
-    if(!req.body.isAdmin){
-      return resp.json({message: "não autorizado"})
-    }
-
-    next()
-}
 
 
-usersRoutes.put("/:id", usersController.update);
+usersRoutes.put("/", ensureAuthenticated, usersController.update);
 usersRoutes.post("/", usersController.create);
-usersRoutes.delete("/:id", usersController.delete);
+//usersRoutes.delete("/:id", usersController.delete);
 
 
 module.exports = usersRoutes;
