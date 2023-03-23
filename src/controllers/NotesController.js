@@ -1,10 +1,10 @@
 const knex = require("../database/knex");
 
 class NotesController {
-    async create(req, res){
+    async create(request, response){
         
-        const {title, description, tags, links} = req.body;
-        const user_id = req.user.id
+        const {title, description, tags, links} = request.body;
+        const user_id = request.user.id
 
         const note_id = await knex("notes").insert({
             title,
@@ -30,11 +30,11 @@ class NotesController {
 
         await knex("tags").insert(tagsInsert)
 
-        return res.json()
+        return response.json()
 
     }
-    async show(req, res){
-        const {id} = req.params;
+    async show(request, response){
+        const {id} = request.params;
 
     const user = await knex("users").where({id}).first();
     const note = await knex("notes").where({ user_id: id }).first();
@@ -42,7 +42,7 @@ class NotesController {
     const links = await knex("links").where({note_id: id}).orderBy("created_at")
 
 
-    return res.json({
+    return response.json({
         ...user,
         note,
         tags,
@@ -50,19 +50,20 @@ class NotesController {
     })
 
     }
-    async delete(req, res) {
-        const { id } = req.params;
+    async delete(request, response) {
+        const { id } = request.params;
 
         await knex("notes").where({id}).delete()
 
-        return res.json({
+        return response.json({
             nota: id,
             message: "deletado com sucesso"
         })
     }
-    async index(req, res) {
-        const { user_id, title, tags, id } = req.query
-
+    async index(request, response) {
+        const { title, tags } = request.query
+        const user_id = request.user.id
+        
         let notes;
 
         if(tags){
@@ -86,7 +87,7 @@ class NotesController {
             }
         })
 
-        return res.json(notesWithTags)
+        return response.json(notesWithTags)
     }
 }
 
