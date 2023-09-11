@@ -36,15 +36,15 @@ class NotesController {
     async show(request, response){
         const {id} = request.params;
 
-    const user = await knex("users").where({id}).first();
-    const note = await knex("notes").where({ user_id: id }).first();
-    const tags = await knex("tags").where({user_id: id}).orderBy("name")
+  
+    const note = await knex("notes").where({ id }).first();
+    const tags = await knex("tags").where({note_id: id}).orderBy("name")
     const links = await knex("links").where({note_id: id}).orderBy("created_at")
 
 
     return response.json({
-        ...user,
-        note,
+
+        ...note,
         tags,
         links
     })
@@ -68,8 +68,7 @@ class NotesController {
 
         if(tags){
             const filteTags = tags.split(",").map(tag => tag.trim());
-            
-            notes = await knex("tags").select(["notes.id", "notes.title", "notes.user_id"]).where("notes.user_id", user_id).whereLike("notes.title", `%${title}%`).whereIn("name", filteTags).innerJoin("notes", "notes.id", "tags.note_id").orderBy("notes.title")
+            notes = await knex("tags").select(["notes.id", "notes.title", "notes.user_id"]).where("notes.user_id", user_id).whereLike("notes.title", `%${title}%`).whereIn("name", filteTags).innerJoin("notes", "notes.id", "tags.note_id").groupBy("notes.id").orderBy("notes.title")
 
         }else {
 
